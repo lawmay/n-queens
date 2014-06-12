@@ -3,22 +3,34 @@ var NRookTree = function(n) {
   this.n = n;
   this.nodeQueue = [];
   this.topNode = new Node(n, null, null, []);
-  this.solutionsCount = 0;
+  if (n === 1) {
+    this.solutionsCount = 1;
+  } else {
+    this.solutionsCount = 0;
+  }
 
-  this.buildTree();
-  // this.searchChildren(topNode);
+  // this.buildTree();
 };
 
 NRookTree.prototype.buildTree = function() {
+  // fill out the first row with nodes in every square
   this.addParentChildren();
+
+  // nodeQueue holds all nodes that haven't had addChildren called on it
+  // when we shift a node out of the nodeQueue, we add all of it's children
+  //   into the queue
   while (this.nodeQueue.length) {
+    // shift one node out from nodeQueue
     var currentNode = this.nodeQueue.shift();
+    // collect that node's children
     var currentChildren = currentNode.addChildren();
+    // increment solutionsCount if a node is added and is on the last row
     for (var i = 0; i < currentChildren.length; i++) {
       if (currentChildren[i].row === (this.n - 1)) {
         this.solutionsCount++;
       }
     }
+    // add the shifted out node's children back into nodeQueue
     this.nodeQueue = this.nodeQueue.concat(currentChildren);
   }
 };
@@ -76,9 +88,27 @@ Node.prototype.addChildren = function() {
   return this.children;
 };
 
-var newTree = new NRookTree(3);
-console.log(newTree.dps());
+NRookTree.prototype.findASolution = function() {
+  // make storage array
+  var storage = [];
+  // place node on first row
+  var newNode = new Node(this.n, 0, 0, []);
+  // keep adding 1 child to node
+  while (newNode !== undefined) {
+    // push newNode's position into storage array
+    storage.push([newNode.row, newNode.col]);
+    newNode = newNode.addChildren()[0];
+  }
+  // return storage array
+  return storage;
+};
 
-newTree.solutionsCount
+
+
+
+
+
+
+
 
 

@@ -13,30 +13,36 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 window.findNRooksSolution = function(n) {
-  var solution = undefined;
+  var board = [];
+  for (var row = 0; row < n; row++) {
+    board.push([]);
+    for (var col = 0; col < n; col++) {
+      board[row].push(0);
+    }
+  }
 
+  // make new NRookTree
+  var newTree = new NRookTree(n);
+  // call find single solution, returning array of solutions positions
+  var solutionPoss = newTree.findASolution();
 
-  // var rookTree = new NRookTree();
-  // var board = new Board({n:5});
+  // iterate through solution array and use togglePiece method to create solution
+  for (var i = 0; i < solutionPoss.length; i++) {
+    board[solutionPoss[i][0]][solutionPoss[i][1]] = 1;
+  }
 
-
-
-  // console.log(board);
-
-
-
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(board));
+  return board;
 };
 
 
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
-
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  var newTree = new NRookTree(n);
+  newTree.buildTree();
+  console.log('Number of solutions for ' + n + ' rooks:', newTree.solutionsCount);
+  return newTree.solutionsCount;
 };
 
 
